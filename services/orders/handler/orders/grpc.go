@@ -3,32 +3,32 @@ package handler
 import (
 	"context"
 
+	orders "github.com/GuilhermeMarques18/K8s-Autoscaling-POC.git/services/common/genproto/orders"
 	"github.com/GuilhermeMarques18/K8s-Autoscaling-POC.git/services/orders/types"
+	"google.golang.org/grpc"
 )
 
 type OrdersGrpcHandler struct {
-	ordersService types.OrderService
 	orders.UnimplementedOrderServiceServer
+	ordersService types.OrderService
 }
 
-func NewGrpcOrdersHandler() {
-	gRPCHandler := &OrdersGrpcHandler{}
+func NewGrpcOrdersService(grpcServer *grpc.Server, ordersService types.OrderService) {
+	h := &OrdersGrpcHandler{ordersService: ordersService}
+	orders.RegisterOrderServiceServer(grpcServer, h)
 }
 
 func (h *OrdersGrpcHandler) CreateOrder(ctx context.Context, req *orders.CreateOrderRequest) (*orders.CreateOrderResponse, error) {
 	order := &orders.Order{
 		OrderID:    42,
-		CustomerId: 2,
-		ProductID:  1,
-		Quantity:   10,
+		CustomerID: req.CustomerId,
+		ProductID:  req.ProductId,
+		Quantity:   req.Quantity,
 	}
-	err := h.ordersService.CreateOrder(ctx, order)
-	if err != nil {
+
+	if err := h.ordersService.CreateOrder(ctx, order); err != nil {
 		return nil, err
 	}
 
-	res := &orders.CreateOrderResponse{
-		Status: "sucess",
-	}
-	return res, nil
+	return &orders.CreateOrderResponse{Status: "success"}, nil
 }
