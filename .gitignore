@@ -1,4 +1,4 @@
-proto/
+protobuf/
 .env
 
 .idea/
