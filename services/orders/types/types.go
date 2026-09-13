@@ -3,9 +3,10 @@ package types
 import (
 	"context"
 
-	orders "github.com/GuilhermeMarques18/K8s-Autoscaling-POC.git/services/common/genproto/orders"
+	"github.com/GuilhermeMarques18/K8s-Autoscaling-POC.git/services/common/genproto/orders"
 )
 
 type OrderService interface {
-	CreateOrder(context.Context, *orders.Order) error
+	CreateOrder(ctx context.Context, order *orders.Order) error
+	GetOrders(ctx context.Context, customerID int32) ([]*orders.Order, error)
 }

@@ -4,7 +4,7 @@
 // 	protoc        v3.21.12
 // source: orders.proto
 
-package K8s_Autoscaling_POC
+package orders
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -285,7 +285,7 @@ var File_orders_proto protoreflect.FileDescriptor
 
 const file_orders_proto_rawDesc = "" +
 	"\n" +
-	"\forders.proto\"{\n" +
+	"\forders.proto\x12\x06orders\"{\n" +
 	"\x05Order\x12\x18\n" +
 	"\aOrderID\x18\x01 \x01(\x05R\aOrderID\x12\x1e\n" +
 	"\n" +
@@ -304,11 +304,12 @@ const file_orders_proto_rawDesc = "" +
 	"\x0fGetOrderRequest\x12\x1e\n" +
 	"\n" +
 	"customerID\x18\x01 \x01(\x05R\n" +
-	"customerID\"2\n" +
-	"\x10GetOrderResponse\x12\x1e\n" +
-	"\x06orders\x18\x01 \x03(\v2\x06.OrderR\x06orders2J\n" +
-	"\fOrderService\x12:\n" +
-	"\vCreateOrder\x12\x13.CreateOrderRequest\x1a\x14.CreateOrderResponse\"\x00B3Z1github.com/GuilhermeMarques18/K8s-Autoscaling-POCb\x06proto3"
+	"customerID\"9\n" +
+	"\x10GetOrderResponse\x12%\n" +
+	"\x06orders\x18\x01 \x03(\v2\r.orders.OrderR\x06orders2\x99\x01\n" +
+	"\fOrderService\x12H\n" +
+	"\vCreateOrder\x12\x1a.orders.CreateOrderRequest\x1a\x1b.orders.CreateOrderResponse\"\x00\x12?\n" +
+	"\bGetOrder\x12\x17.orders.GetOrderRequest\x1a\x18.orders.GetOrderResponse\"\x00B^Z\\github.com/GuilhermeMarques18/K8s-Autoscaling-POC.git/services/common/genproto/orders;ordersb\x06proto3"
 
 var (
 	file_orders_proto_rawDescOnce sync.Once
@@ -324,18 +325,20 @@ func file_orders_proto_rawDescGZIP() []byte {
 
 var file_orders_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_orders_proto_goTypes = []any{
-	(*Order)(nil),               // 0: Order
-	(*CreateOrderRequest)(nil),  // 1: CreateOrderRequest
-	(*CreateOrderResponse)(nil), // 2: CreateOrderResponse
-	(*GetOrderRequest)(nil),     // 3: GetOrderRequest
-	(*GetOrderResponse)(nil),    // 4: GetOrderResponse
+	(*Order)(nil),               // 0: orders.Order
+	(*CreateOrderRequest)(nil),  // 1: orders.CreateOrderRequest
+	(*CreateOrderResponse)(nil), // 2: orders.CreateOrderResponse
+	(*GetOrderRequest)(nil),     // 3: orders.GetOrderRequest
+	(*GetOrderResponse)(nil),    // 4: orders.GetOrderResponse
 }
 var file_orders_proto_depIdxs = []int32{
-	0, // 0: GetOrderResponse.orders:type_name -> Order
-	1, // 1: OrderService.CreateOrder:input_type -> CreateOrderRequest
-	2, // 2: OrderService.CreateOrder:output_type -> CreateOrderResponse
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
+	0, // 0: orders.GetOrderResponse.orders:type_name -> orders.Order
+	1, // 1: orders.OrderService.CreateOrder:input_type -> orders.CreateOrderRequest
+	3, // 2: orders.OrderService.GetOrder:input_type -> orders.GetOrderRequest
+	2, // 3: orders.OrderService.CreateOrder:output_type -> orders.CreateOrderResponse
+	4, // 4: orders.OrderService.GetOrder:output_type -> orders.GetOrderResponse
+	3, // [3:5] is the sub-list for method output_type
+	1, // [1:3] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
