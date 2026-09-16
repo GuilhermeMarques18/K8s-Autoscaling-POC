@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kitchen
+  labels:
+    app: kitchen
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kitchen
+  template:
+    metadata:
+      labels:
+        app: kitchen
+    spec:
+      containers:
+        - name: kitchen
+          image: guilhermemarques18/kitchen:latest
+          ports:
+            - containerPort: 9000
+          env:
+            - name: HTTP_ADDR
+              value: ":9000"
+            - name: ORDERS_GRPC_ADDR
+              value: "orders:8080"
