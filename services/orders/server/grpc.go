@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"log"
 	"net"
 
@@ -20,7 +21,7 @@ func NewGRPCServer(addr string) *GRPCServer {
 func (s *GRPCServer) Run() error {
 	lis, err := net.Listen("tcp", s.addr)
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		return fmt.Errorf("Failed to listen: %w", err)
 	}
 
 	grpcServer := grpc.NewServer()
@@ -28,7 +29,10 @@ func (s *GRPCServer) Run() error {
 	orderService := service.NewOrderService()
 	handler.NewGrpcOrdersService(grpcServer, orderService)
 
-	log.Println("Starting gRPC server at ", s.addr)
+	log.Println("Starting GRPC server at ", s.addr)
 
-	return grpcServer.Serve(lis)
+	if err := grpcServer.Serve(lis); err != nil {
+		return fmt.Errorf("GPRC server stopped: %w", err)
+	}
+	return nil
 }
