@@ -24,3 +24,10 @@ spec:
               value: ":9000"
             - name: ORDERS_GRPC_ADDR
               value: "orders:8080"
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
