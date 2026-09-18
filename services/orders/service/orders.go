@@ -10,21 +10,24 @@ import (
 	"github.com/GuilhermeMarques18/K8s-Autoscaling-POC.git/services/common/genproto/orders"
 )
 
-var workIterations = loadWorkIterations()
+var (
+	createWorkIterations = loadWorkIterations("ORDER_WORK_ITERATIONS_CREATE", 20000)
+	getWorkIterations     = loadWorkIterations("ORDER_WORK_ITERATIONS_GET", 5000)
+)
 
-func loadWorkIterations() int {
-	if v := os.Getenv("ORDER_WORK_ITERATIONS"); v != "" {
+func loadWorkIterations(key string, fallback int) int {
+	if v := os.Getenv(key); v != "" {
 		if n, err := strconv.Atoi(v); err == nil {
 			return n
 		}
 	}
-	return 20000
+	return fallback
 }
 
-func simulateProcessing(order *orders.Order) {
+func simulateWork(seed string, iterations int) {
 	h := sha256.New()
-	data := []byte(strconv.Itoa(int(order.OrderID)) + strconv.Itoa(int(order.ProductID)))
-	for i := 0; i < workIterations; i++ {
+	data := []byte(seed)
+	for i := 0; i < iterations; i++ {
 		h.Write(data)
 		data = h.Sum(nil)
 	}
@@ -32,31 +35,26 @@ func simulateProcessing(order *orders.Order) {
 
 type OrderService struct {
 	mu     sync.RWMutex
-	orders []*orders.Order
+	orders map[int32][]*orders.Order
 }
 
 func NewOrderService() *OrderService {
-	return &OrderService{}
+	return &OrderService{orders: make(map[int32][]*orders.Order)}
 }
 
 func (s *OrderService) CreateOrder(ctx context.Context, order *orders.Order) error {
-	simulateProcessing(order)
+	simulateWork(strconv.Itoa(int(order.OrderID))+strconv.Itoa(int(order.ProductID)), createWorkIterations)
 
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	s.orders = append(s.orders, order)
+	s.orders[order.CustomerID] = append(s.orders[order.CustomerID], order)
 	return nil
 }
 
 func (s *OrderService) GetOrders(ctx context.Context, customerID int32) ([]*orders.Order, error) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
+	simulateWork(strconv.Itoa(int(customerID)), getWorkIterations)
 
-	var result []*orders.Order
-	for _, o := range s.orders {
-		if o.CustomerID == customerID {
-			result = append(result, o)
-		}
-	}
-	return result, nil
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	return s.orders[customerID], nil
 }

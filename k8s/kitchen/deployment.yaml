@@ -5,7 +5,7 @@ metadata:
   labels:
     app: kitchen
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: kitchen
@@ -17,6 +17,7 @@ spec:
       containers:
         - name: kitchen
           image: guilhermemarques18/kitchen:latest
+          imagePullPolicy: Never
           ports:
             - containerPort: 9000
           env:

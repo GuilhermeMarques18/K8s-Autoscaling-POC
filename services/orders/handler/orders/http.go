@@ -42,5 +42,5 @@ func (h *OrdersHttpHandler) CreateOrder(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	res := &orders.CreateOrderResponse{Status: "success"}
-	util.WriteJSON(w, http.StatusOK, res)
+	util.WriteJSON(w, http.StatusCreated, res)
 }
